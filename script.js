@@ -34,7 +34,7 @@ function updateProgressMessage() {
     return setInterval(() => {
         progressText.textContent = progressMessages[messageIndex];
         messageIndex = (messageIndex + 1) % progressMessages.length;
-    }, 2000);
+    }, 4000);
 }
 
 async function generateSIAPA() {
@@ -58,6 +58,10 @@ async function generateSIAPA() {
     const progressInterval = updateProgressMessage();
 
     try {
+        // Create AbortController for timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 minutes timeout
+
         const analysisPrompt = `Create a SIAPA marketing framework analysis for this product: "${productDescription}"
 
         Format your response exactly like this:
@@ -108,8 +112,12 @@ async function generateSIAPA() {
                         ]
                     }
                 ]
-            })
+            }),
+            signal: controller.signal // Add abort signal
         });
+
+        // Clear timeout if request completes
+        clearTimeout(timeoutId);
 
         const data = await response.json();
         console.log('API Response:', data);
@@ -245,7 +253,14 @@ async function generateSIAPA() {
         clearInterval(progressInterval);
         console.error('Full error:', error);
         console.error('Error stack:', error.stack);
-        alert('Error generating analysis: ' + error.message);
+        
+        // Provide more specific error message for timeout
+        if (error.name === 'AbortError') {
+            alert('The request took too long to complete. Please try again.');
+        } else {
+            alert('Error generating analysis: ' + error.message);
+        }
+        
         document.getElementById('loadingSpinner').style.display = 'none';
     }
 }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIAPA Marketing Framework Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+    <div class="container">
+        <h1>SIAPA Marketing Framework Generator</h1>
+        
+        <div class="api-key-section" id="apiKeySection">
+            <h2>Setup</h2>
+            <input type="text" id="apiKeyInput" placeholder="Enter your OpenRouter API key">
+            <button onclick="saveApiKey()">Save API Key</button>
+        </div>
+
+        <div class="input-section">
+            <textarea id="productDescription" placeholder="Enter your product description here..."></textarea>
+            <button id="generateBtn" onclick="generateSIAPA()">Generate SIAPA Analysis</button>
+        </div>
+
+        <div class="loading" id="loadingSpinner">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <p class="progress-text">Analyzing your product...</p>
+            </div>
+        </div>
+
+        <div class="results" id="resultsSection">
+            <div class="header-actions">
+                <button onclick="copyAllResults()" class="copy-btn">Copy All Results</button>
+            </div>
+            <div class="siapa-item">
+                <div class="item-header">
+                    <h3>Sasaran (Target)</h3>
+                    <button onclick="copySectionResults('sasaran')" class="copy-btn">Copy</button>
+                </div>
+                <div id="sasaranOutput" class="output-content">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="siapa-item">
+                <div class="item-header">
+                    <h3>Isu (Issue)</h3>
+                    <button onclick="copySectionResults('isu')" class="copy-btn">Copy</button>
+                </div>
+                <div id="isuOutput" class="output-content">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="siapa-item">
+                <div class="item-header">
+                    <h3>Akibat (Consequence)</h3>
+                    <button onclick="copySectionResults('akibat')" class="copy-btn">Copy</button>
+                </div>
+                <div id="akibatOutput" class="output-content">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="siapa-item">
+                <div class="item-header">
+                    <h3>Potensi (Potential)</h3>
+                    <button onclick="copySectionResults('potensi')" class="copy-btn">Copy</button>
+                </div>
+                <div id="potensiOutput" class="output-content">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="siapa-item">
+                <div class="item-header">
+                    <h3>Action (Action)</h3>
+                    <button onclick="copySectionResults('action')" class="copy-btn">Copy</button>
+                </div>
+                <div id="actionOutput" class="output-content">
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 

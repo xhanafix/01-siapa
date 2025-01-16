@@ -51,9 +51,18 @@ input[type="text"], textarea {
     color: var(--text-color);
 }
 
+textarea::placeholder {
+    color: var(--text-color);
+    opacity: 0.7;
+    white-space: pre-line;
+    line-height: 1.4;
+}
+
 textarea {
-    min-height: 100px;
+    min-height: 200px;
     resize: vertical;
+    line-height: 1.4;
+    font-family: inherit;
 }
 
 button {

@@ -62,3 +62,70 @@ The SIAPA framework consists of five key marketing components:
 ## 🛠️ Technical Implementation
 
 ### Files Structure 
+
+## 📋 Usage Tips
+
+1. **Writing Product Descriptions**
+   - Be specific about product features
+   - Include target market information
+   - Mention unique selling points
+
+2. **Getting Better Results**
+   - Provide clear, concise descriptions
+   - Include relevant market context
+   - Specify any particular focus areas
+
+3. **Using the Copy Feature**
+   - Copy individual sections for specific use
+   - Use "Copy All" for complete analysis
+   - Formatted output ready for sharing
+
+## ⚠️ Common Issues
+
+1. **API Key Issues**
+   - Ensure key is entered correctly
+   - Check key validity on OpenRouter
+   - Clear browser cache if needed
+
+2. **No Response**
+   - Check internet connection
+   - Verify API key status
+   - Try refreshing the page
+
+3. **Parsing Errors**
+   - Try simplifying product description
+   - Ensure text is properly formatted
+   - Avoid special characters
+
+## 🔒 Security Notes
+
+- API key is stored in browser's localStorage
+- Clear browser data to remove stored key
+- Don't share your API key
+- Use HTTPS in production
+
+## 🤝 Contributing
+
+Feel free to:
+- Report bugs
+- Suggest features
+- Submit pull requests
+- Improve documentation
+
+## 📝 License
+
+MIT License - feel free to use and modify for your needs.
+
+## 🆘 Support
+
+For issues or questions:
+1. Check the common issues section
+2. Review the OpenRouter API documentation
+3. Open an issue in the repository
+
+## 🙏 Acknowledgments
+
+- OpenRouter for AI API access
+- SIAPA framework methodology 
+
+### API Integration 

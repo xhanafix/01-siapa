@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedApiKey) {
         document.getElementById('apiKeySection').style.display = 'none';
     }
+    
+    // Load history when page loads
+    loadHistoryLog();
 });
 
 // Save API key to localStorage
@@ -15,6 +18,139 @@ function saveApiKey() {
     } else {
         alert('Please enter a valid API key');
     }
+}
+
+// History Log Management
+function saveToHistory(productDescription, analysisData) {
+    // Get existing history or initialize empty array
+    let history = JSON.parse(localStorage.getItem('siapaHistory') || '[]');
+    
+    // Add new entry at the beginning (newest first)
+    history.unshift({
+        timestamp: new Date().toISOString(),
+        description: productDescription.substring(0, 100) + (productDescription.length > 100 ? '...' : ''),
+        fullDescription: productDescription,
+        data: analysisData
+    });
+    
+    // Limit history to 20 entries
+    if (history.length > 20) {
+        history = history.slice(0, 20);
+    }
+    
+    // Save back to localStorage
+    localStorage.setItem('siapaHistory', JSON.stringify(history));
+    
+    // Refresh history display
+    loadHistoryLog();
+}
+
+function loadHistoryLog() {
+    const historyList = document.getElementById('historyList');
+    const history = JSON.parse(localStorage.getItem('siapaHistory') || '[]');
+    
+    if (history.length === 0) {
+        historyList.innerHTML = '<div class="no-history">No history yet</div>';
+        return;
+    }
+    
+    historyList.innerHTML = '';
+    
+    history.forEach((entry, index) => {
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.dataset.index = index;
+        
+        const timestamp = new Date(entry.timestamp);
+        const formattedDate = `${timestamp.toLocaleDateString()} ${timestamp.toLocaleTimeString()}`;
+        
+        item.innerHTML = `
+            <div class="timestamp">${formattedDate}</div>
+            <div class="description">${entry.description}</div>
+        `;
+        
+        item.addEventListener('click', () => loadHistoryItem(index));
+        historyList.appendChild(item);
+    });
+}
+
+function loadHistoryItem(index) {
+    const history = JSON.parse(localStorage.getItem('siapaHistory') || '[]');
+    if (!history[index]) return;
+    
+    const item = history[index];
+    
+    // Fill the product description
+    document.getElementById('productDescription').value = item.fullDescription;
+    
+    // Fill the result sections
+    const sectionTitles = ['sasaran', 'isu', 'akibat', 'potensi', 'action'];
+    sectionTitles.forEach(field => {
+        const outputElement = document.getElementById(`${field}Output`).querySelector('ul');
+        if (item.data[field] && item.data[field].length > 0) {
+            outputElement.innerHTML = item.data[field]
+                .map(point => `<li>${point}</li>`)
+                .join('');
+        } else {
+            outputElement.innerHTML = '';
+        }
+    });
+    
+    // Show results section
+    document.getElementById('loadingSpinner').style.display = 'none';
+    document.getElementById('resultsSection').style.display = 'block';
+}
+
+function clearHistory() {
+    if (confirm('Are you sure you want to clear all history?')) {
+        localStorage.removeItem('siapaHistory');
+        loadHistoryLog();
+    }
+}
+
+// Export history to text file
+function exportHistoryToFile() {
+    const history = JSON.parse(localStorage.getItem('siapaHistory') || '[]');
+    
+    if (history.length === 0) {
+        alert('No history to export');
+        return;
+    }
+    
+    // Create text content
+    let fileContent = "SIAPA MARKETING FRAMEWORK GENERATOR - HISTORY LOG\n\n";
+    
+    history.forEach((entry, index) => {
+        const timestamp = new Date(entry.timestamp);
+        const formattedDate = `${timestamp.toLocaleDateString()} ${timestamp.toLocaleTimeString()}`;
+        
+        fileContent += `--- ENTRY ${index + 1} - ${formattedDate} ---\n\n`;
+        fileContent += `PRODUCT DESCRIPTION:\n${entry.fullDescription}\n\n`;
+        fileContent += "ANALYSIS RESULTS:\n";
+        
+        const sections = ['sasaran', 'isu', 'akibat', 'potensi', 'action'];
+        sections.forEach(section => {
+            if (entry.data[section] && entry.data[section].length > 0) {
+                fileContent += `\n${section.toUpperCase()}:\n`;
+                entry.data[section].forEach(point => {
+                    fileContent += `• ${point}\n`;
+                });
+            }
+        });
+        
+        fileContent += "\n\n" + "=".repeat(50) + "\n\n";
+    });
+    
+    // Create and download the file
+    const blob = new Blob([fileContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'siapa_history_' + new Date().toISOString().slice(0, 10) + '.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 const progressMessages = [
@@ -247,6 +383,9 @@ async function generateSIAPA() {
         clearInterval(progressInterval);
         document.getElementById('loadingSpinner').style.display = 'none';
         document.getElementById('resultsSection').style.display = 'block';
+        
+        // Save to history
+        saveToHistory(productDescription, analysisData);
 
     } catch (error) {
         // On error, clean up
@@ -324,4 +463,63 @@ async function copyAllResults() {
             button.textContent = 'Copy All Results';
         }, 2000);
     }
+}
+
+// Export current analysis to text file
+function exportCurrentAnalysis() {
+    const productDescription = document.getElementById('productDescription').value.trim();
+    const sections = ['sasaran', 'isu', 'akibat', 'potensi', 'action'];
+    
+    // Check if there's any content to export
+    let hasContent = false;
+    for (const section of sections) {
+        const ul = document.getElementById(`${section}Output`).querySelector('ul');
+        if (ul.getElementsByTagName('li').length > 0) {
+            hasContent = true;
+            break;
+        }
+    }
+    
+    if (!hasContent) {
+        alert('No analysis results to export');
+        return;
+    }
+    
+    // Create file content
+    let fileContent = "SIAPA MARKETING FRAMEWORK ANALYSIS\n";
+    fileContent += "Generated on: " + new Date().toLocaleString() + "\n\n";
+    fileContent += "PRODUCT DESCRIPTION:\n" + productDescription + "\n\n";
+    fileContent += "ANALYSIS RESULTS:\n";
+    
+    sections.forEach(section => {
+        const ul = document.getElementById(`${section}Output`).querySelector('ul');
+        const points = Array.from(ul.getElementsByTagName('li')).map(li => li.textContent);
+        
+        if (points.length > 0) {
+            fileContent += `\n${section.toUpperCase()}:\n`;
+            points.forEach(point => {
+                fileContent += `• ${point}\n`;
+            });
+        }
+    });
+    
+    // Create and download the file
+    const blob = new Blob([fileContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'siapa_analysis_' + new Date().toISOString().slice(0, 10) + '.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    // Visual feedback
+    const button = document.getElementById('exportCurrentBtn');
+    button.classList.add('success');
+    button.textContent = 'Exported!';
+    setTimeout(() => {
+        button.classList.remove('success');
+        button.textContent = 'Export as File';
+    }, 2000);
 } 

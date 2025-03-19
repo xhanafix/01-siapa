@@ -40,6 +40,7 @@ A mobile app that helps busy professionals track and manage their daily water in
 
         <div class="results" id="resultsSection">
             <div class="header-actions">
+                <button onclick="exportCurrentAnalysis()" id="exportCurrentBtn" class="export-btn">Export as File</button>
                 <button onclick="copyAllResults()" class="copy-btn">Copy All Results</button>
             </div>
             <div class="siapa-item">
@@ -101,6 +102,19 @@ A mobile app that helps busy professionals track and manage their daily water in
                 <div id="actionOutput" class="output-content">
                     <ul></ul>
                 </div>
+            </div>
+        </div>
+        
+        <!-- History Log Section -->
+        <div class="history-log">
+            <h2>Generation History</h2>
+            <div class="history-actions">
+                <button onclick="exportHistoryToFile()" class="export-history">Export to File</button>
+                <button onclick="clearHistory()" class="clear-history">Clear History</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- History items will be added dynamically -->
+                <div class="no-history">No history yet</div>
             </div>
         </div>
     </div>

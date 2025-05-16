@@ -41,6 +41,10 @@ h1 {
     border-radius: 8px;
 }
 
+.api-key-section input[type="text"] {
+    margin-bottom: 0.8rem;
+}
+
 input[type="text"], textarea {
     width: 100%;
     padding: 0.8rem;
@@ -339,4 +343,26 @@ button:hover {
 .export-history:hover {
     background-color: var(--primary-color);
     color: white;
+}
+
+.input-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+#generateBtn {
+    flex: 1;
+}
+
+#settingsBtn {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+#settingsBtn:hover {
+    background-color: var(--primary-color);
+    color: white;
+    opacity: 1;
 } 

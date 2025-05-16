@@ -1,8 +1,14 @@
 // Check for saved API key on load
 document.addEventListener('DOMContentLoaded', () => {
     const savedApiKey = localStorage.getItem('openRouterApiKey');
+    const savedModel = localStorage.getItem('openRouterModel');
     if (savedApiKey) {
         document.getElementById('apiKeySection').style.display = 'none';
+    }
+    
+    // Set the saved model if available
+    if (savedModel) {
+        document.getElementById('modelInput').value = savedModel;
     }
     
     // Load history when page loads
@@ -12,8 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // Save API key to localStorage
 function saveApiKey() {
     const apiKey = document.getElementById('apiKeyInput').value.trim();
+    const model = document.getElementById('modelInput').value.trim();
+    
     if (apiKey) {
         localStorage.setItem('openRouterApiKey', apiKey);
+        if (model) {
+            localStorage.setItem('openRouterModel', model);
+        }
         document.getElementById('apiKeySection').style.display = 'none';
     } else {
         alert('Please enter a valid API key');
@@ -185,6 +196,18 @@ async function generateSIAPA() {
         alert('Please enter a product description');
         return;
     }
+    
+    // Get the model from localStorage or from the input field
+    let model = localStorage.getItem('openRouterModel');
+    if (!model) {
+        model = document.getElementById('modelInput').value.trim();
+        if (!model) {
+            alert('Please enter an AI model in the settings section');
+            return;
+        }
+        // Save it for future use
+        localStorage.setItem('openRouterModel', model);
+    }
 
     // Show loading spinner
     document.getElementById('loadingSpinner').style.display = 'block';
@@ -236,7 +259,7 @@ async function generateSIAPA() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "model": "google/learnlm-1.5-pro-experimental:free",
+                "model": model,
                 "messages": [
                     {
                         "role": "user",
@@ -522,4 +545,9 @@ function exportCurrentAnalysis() {
         button.classList.remove('success');
         button.textContent = 'Export as File';
     }, 2000);
+}
+
+// Function to show API key section again
+function showSettings() {
+    document.getElementById('apiKeySection').style.display = 'block';
 } 

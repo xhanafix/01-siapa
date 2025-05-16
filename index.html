@@ -13,7 +13,8 @@
         <div class="api-key-section" id="apiKeySection">
             <h2>Setup</h2>
             <input type="text" id="apiKeyInput" placeholder="Enter your OpenRouter API key">
-            <button onclick="saveApiKey()">Save API Key</button>
+            <input type="text" id="modelInput" placeholder="Enter your preferred OpenRouter AI model">
+            <button onclick="saveApiKey()">Save Settings</button>
         </div>
 
         <div class="input-section">
@@ -26,7 +27,10 @@
 
 Example: 
 A mobile app that helps busy professionals track and manage their daily water intake. It features customized reminders, progress tracking, and health insights. The app includes gamification elements and social sharing to encourage consistent hydration habits."></textarea>
-            <button id="generateBtn" onclick="generateSIAPA()">Generate SIAPA Analysis</button>
+            <div class="input-actions">
+                <button id="generateBtn" onclick="generateSIAPA()">Generate SIAPA Analysis</button>
+                <button id="settingsBtn" onclick="showSettings()">Change Settings</button>
+            </div>
         </div>
 
         <div class="loading" id="loadingSpinner">
